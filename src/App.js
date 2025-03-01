@@ -10,7 +10,7 @@ function App() {
       <div className="App">
         {/* إزالة nav<Link> لجعل التنقل يتم عبر URL فقط */}
         <Routes>
-          <Route path="/aslamadmain123" element={<AdminPage />} />
+          <Route path="/" element={<AdminPage />} />
           <Route path="/residence" element={<ResidencePage />} />
           <Route path="/password-reset" element={<PasswordResetPage />} />
         </Routes>
