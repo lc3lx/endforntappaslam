@@ -1,18 +1,17 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import AdminPage from "./components/AdminPage";
-import ResidencePage from "./components/ResidencePage";
-import PasswordResetPage from "./components/PasswordResetPage";
+import React from 'react';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import AdminPage from './components/AdminPage';
+import UserPage from './components/UserPage';
+import SinglePage from './components/SinglePage';
 
 function App() {
   return (
     <Router>
       <div className="App">
-        {/* إزالة nav<Link> لجعل التنقل يتم عبر URL فقط */}
         <Routes>
           <Route path="/" element={<AdminPage />} />
-          <Route path="/residence" element={<ResidencePage />} />
-          <Route path="/password-reset" element={<PasswordResetPage />} />
+          <Route path="/user" element={<ResidencePage />} />
+          <Route path="/single" element={<PasswordResetPage />} />
         </Routes>
       </div>
     </Router>
