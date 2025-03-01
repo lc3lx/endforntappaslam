@@ -1,8 +1,8 @@
 import React from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import AdminPage from './components/AdminPage';
-import UserPage from './components/UserPage';
-import SinglePage from './components/SinglePage';
+import ResidencePage from './components/UserPage';
+import PasswordResetPage from './components/SinglePage';
 
 function App() {
   return (
