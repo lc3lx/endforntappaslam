@@ -23,7 +23,8 @@ const AdminPage = () => {
 
       if (response.status === 200) {
         const responseData = response.data;
-        setResultMessage(`${messageKey}: ${responseData[messageKey]}`);
+        const resultValue = responseData[messageKey]; // استخراج القيمة الفعلية
+        setResultMessage(`${messageKey}: ${resultValue}`); // عرض النص الكامل للمستخدم
       } else {
         setResultMessage(`حدث خطأ: ${response.statusText}`);
       }
@@ -36,7 +37,10 @@ const AdminPage = () => {
   // دالة لنسخ النص إلى الحافظة
   const copyToClipboard = () => {
     if (resultMessage) {
-      navigator.clipboard.writeText(resultMessage).then(() => {
+      // استخراج القيمة الفعلية من الرسالة الناتجة
+      const valueOnly = resultMessage.split(":").pop().trim(); // أخذ الجزء بعد ":"
+
+      navigator.clipboard.writeText(valueOnly).then(() => {
         setCopied(true);
         setTimeout(() => setCopied(false), 2000); // إخفاء رسالة النسخ بعد 2 ثانية
       });
@@ -49,6 +53,8 @@ const AdminPage = () => {
     <div style={styles.container}>
       <h1>صفحة الإدارة</h1>
       <p style={styles.instruction}>الرجاء إدخال اسم الحساب</p>
+
+      {/* حقل إدخال اسم الحساب */}
       <input
         type="text"
         placeholder="اسم الحساب"
@@ -57,7 +63,7 @@ const AdminPage = () => {
         style={styles.input}
       />
 
-      {/* الزر الأول: طلب رمز السكن */}
+      {/* الأزرار */}
       <button
         onClick={() => sendRequest("/api/fetch-residence-code", "code")}
         style={styles.button}
@@ -65,7 +71,6 @@ const AdminPage = () => {
         طلب رمز السكن
       </button>
 
-      {/* الزر الثاني: طلب رابط تحديث السكن */}
       <button
         onClick={() => sendRequest("/api/fetch-residence-update-link", "link")}
         style={styles.button}
@@ -73,7 +78,6 @@ const AdminPage = () => {
         طلب رابط تحديث السكن
       </button>
 
-      {/* الزر الثالث: طلب استعادة كلمة المرور */}
       <button
         onClick={() => sendRequest("/api/fetch-password-reset-link", "link")}
         style={styles.button}
@@ -81,7 +85,6 @@ const AdminPage = () => {
         طلب استعادة كلمة المرور
       </button>
 
-      {/* الزر الرابع: طلب رابط عضويتك معلقة */}
       <button
         onClick={() => sendRequest("/api/fetch-suspended-account-link", "link")}
         style={styles.button}
@@ -89,7 +92,6 @@ const AdminPage = () => {
         طلب رابط عضويتك معلقة
       </button>
 
-      {/* الزر الخامس: طلب رمز تسجيل الدخول */}
       <button
         onClick={() => sendRequest("/api/fetch-login-code", "code")}
         style={styles.button}
