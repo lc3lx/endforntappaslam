@@ -23,7 +23,7 @@ const ResidencePage = () => {
 
       if (response.status === 200) {
         const responseData = response.data;
-        setResultMessage(`${messageKey}: ${responseData[messageKey]}`);
+        setResultMessage(`${messageKey}: ${responseData[messageKey]}`); // عرض النص الكامل للمستخدم
       } else {
         setResultMessage(`حدث خطأ: ${response.statusText}`);
       }
@@ -36,7 +36,10 @@ const ResidencePage = () => {
   // دالة لنسخ النص إلى الحافظة
   const copyToClipboard = () => {
     if (resultMessage) {
-      navigator.clipboard.writeText(resultMessage).then(() => {
+      // استخراج القيمة الفعلية بعد ":"
+      const valueOnly = resultMessage.split(":").pop().trim();
+
+      navigator.clipboard.writeText(valueOnly).then(() => {
         setCopied(true);
         setTimeout(() => setCopied(false), 2000); // إخفاء رسالة النسخ بعد 2 ثانية
       });
@@ -61,7 +64,7 @@ const ResidencePage = () => {
 
       {/* زر طلب رمز السكن */}
       <button
-        onClick={() => sendRequest("/api/fetch-residence-code", "code")}
+        onClick={() => sendRequest("/api/fetch-residence-code", "رمز السكن")}
         style={styles.button}
       >
         طلب رمز السكن
@@ -69,7 +72,7 @@ const ResidencePage = () => {
 
       {/* زر طلب رابط تحديث السكن */}
       <button
-        onClick={() => sendRequest("/api/fetch-residence-update-link", "link")}
+        onClick={() => sendRequest("/api/fetch-residence-update-link", "رابط تحديث السكن")}
         style={styles.button}
       >
         طلب رابط تحديث السكن
