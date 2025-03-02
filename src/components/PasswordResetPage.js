@@ -23,6 +23,7 @@ const SinglePage = () => {
 
       if (response.status === 200) {
         const responseData = response.data;
+        // بناء الرسالة الكاملة للمستخدم
         setResultMessage(`${messageKey}: ${responseData[messageKey]}`);
       } else {
         setResultMessage(`حدث خطأ: ${response.statusText}`);
@@ -36,7 +37,10 @@ const SinglePage = () => {
   // دالة لنسخ النص إلى الحافظة
   const copyToClipboard = () => {
     if (resultMessage) {
-      navigator.clipboard.writeText(resultMessage).then(() => {
+      // استخراج القيمة الفعلية (بعد ":") من الرسالة
+      const valueOnly = resultMessage.split(":").pop().trim();
+
+      navigator.clipboard.writeText(valueOnly).then(() => {
         setCopied(true);
         setTimeout(() => setCopied(false), 2000); // إخفاء رسالة النسخ بعد 2 ثانية
       });
@@ -59,7 +63,7 @@ const SinglePage = () => {
         style={styles.input}
       />
 
-      {/* زر طلب رمز السكن */}
+      {/* الأزرار */}
       <button
         onClick={() => sendRequest("/api/fetch-residence-code", "code")}
         style={styles.button}
@@ -67,7 +71,6 @@ const SinglePage = () => {
         طلب رمز السكن
       </button>
 
-      {/* زر طلب رابط تحديث السكن */}
       <button
         onClick={() => sendRequest("/api/fetch-residence-update-link", "link")}
         style={styles.button}
@@ -75,7 +78,6 @@ const SinglePage = () => {
         طلب رابط تحديث السكن
       </button>
 
-      {/* زر طلب استعادة كلمة المرور */}
       <button
         onClick={() => sendRequest("/api/fetch-password-reset-link", "link")}
         style={styles.button}
