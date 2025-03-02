@@ -3,18 +3,18 @@ import axios from "axios";
 
 const ResidencePage = () => {
   const [account, setAccount] = useState(""); // اسم الحساب
-  const [resultMessage, setResultMessage] = useState(""); // الرسالة الناتجة
+  const [resultValue, setResultValue] = useState(""); // القيمة الفعلية (رمز أو رابط)
   const [copied, setCopied] = useState(false); // حالة النسخ
 
   // دالة لإرسال الطلب إلى الخادم
   const sendRequest = async (endpoint, messageKey) => {
     if (!account.trim()) {
-      setResultMessage("يرجى إدخال اسم الحساب");
+      setResultValue("يرجى إدخال اسم الحساب");
       return;
     }
 
     try {
-      setResultMessage("جارٍ معالجة الطلب...");
+      setResultValue("جارٍ معالجة الطلب...");
       const response = await axios.post(
         `https://backbot-r2h0.onrender.com${endpoint}`,
         { account: account.trim() },
@@ -23,23 +23,20 @@ const ResidencePage = () => {
 
       if (response.status === 200) {
         const responseData = response.data;
-        setResultMessage(`${messageKey}: ${responseData[messageKey]}`); // عرض النص الكامل للمستخدم
+        setResultValue(responseData[messageKey]); // عرض القيمة الفعلية فقط
       } else {
-        setResultMessage(`حدث خطأ: ${response.statusText}`);
+        setResultValue(`حدث خطأ: ${response.statusText}`);
       }
     } catch (error) {
       console.error(error);
-      setResultMessage("خطأ في الاتصال بالخادم");
+      setResultValue("خطأ في الاتصال بالخادم");
     }
   };
 
   // دالة لنسخ النص إلى الحافظة
   const copyToClipboard = () => {
-    if (resultMessage) {
-      // استخراج القيمة الفعلية بعد ":"
-      const valueOnly = resultMessage.split(":").pop().trim();
-
-      navigator.clipboard.writeText(valueOnly).then(() => {
+    if (resultValue) {
+      navigator.clipboard.writeText(resultValue).then(() => {
         setCopied(true);
         setTimeout(() => setCopied(false), 2000); // إخفاء رسالة النسخ بعد 2 ثانية
       });
@@ -62,26 +59,19 @@ const ResidencePage = () => {
         style={styles.input}
       />
 
-      {/* زر طلب رمز السكن */}
-      <button
-        onClick={() => sendRequest("/api/fetch-residence-code", "رمز السكن")}
-        style={styles.button}
-      >
+      {/* الأزرار */}
+      <button onClick={() => sendRequest("/api/fetch-residence-code", "code")} style={styles.button}>
         طلب رمز السكن
       </button>
 
-      {/* زر طلب رابط تحديث السكن */}
-      <button
-        onClick={() => sendRequest("/api/fetch-residence-update-link", "رابط تحديث السكن")}
-        style={styles.button}
-      >
+      <button onClick={() => sendRequest("/api/fetch-residence-update-link", "link")} style={styles.button}>
         طلب رابط تحديث السكن
       </button>
 
       {/* عرض الناتج */}
       <div style={styles.resultContainer}>
-        <p style={styles.resultText}>{resultMessage}</p>
-        {resultMessage && (
+        <p style={styles.resultText}>{resultValue}</p>
+        {resultValue && (
           <button onClick={copyToClipboard} style={styles.copyButton}>
             {copied ? "تم النسخ!" : "نسخ إلى الحافظة"}
           </button>
@@ -104,7 +94,7 @@ const styles = {
   },
   input: {
     padding: "10px",
-    width: "300px",
+    width: "90%", // تصميم متجاوب
     fontSize: "16px",
     marginBottom: "20px",
   },
@@ -117,19 +107,23 @@ const styles = {
     color: "white",
     border: "none",
     borderRadius: "5px",
+    width: "90%", // تصميم متجاوب
+    display: "block",
+    margin: "auto",
   },
   resultContainer: {
     marginTop: "20px",
     padding: "10px",
     border: "1px solid #ccc",
     borderRadius: "8px",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
+    textAlign: "left", // لجعل الرابط يظهر بشكل متعدد الأسطر
+    maxWidth: "90%", // تصميم متجاوب
+    margin: "auto",
   },
   resultText: {
     fontSize: "16px",
     color: "#333",
+    wordBreak: "break-all", // لعرض الروابط الطويلة فوق بعضها
   },
   copyButton: {
     padding: "5px 10px",
@@ -139,6 +133,9 @@ const styles = {
     color: "white",
     border: "none",
     borderRadius: "5px",
+    marginTop: "10px",
+    display: "block",
+    margin: "auto",
   },
 };
 
